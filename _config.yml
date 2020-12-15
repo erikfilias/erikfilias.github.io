@@ -30,9 +30,8 @@ twitter_username: ErikFco
 github_username:  erikfilias
 
 # Build settings
-# theme: minima
-
-theme: minimal-mistakes-jekyll
+theme: minima
+# theme: minimal-mistakes-jekyll
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
