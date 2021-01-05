@@ -3,7 +3,7 @@
 1. Sign up in [Gurobi webpage](https://pages.gurobi.com/registration).
 
 		Account Type: Academic
-		Email Address: la del IIT o de la escuela, pero tiene que terminar en ".edu"
+		Email Address: From IIT o ICAI, but have to end in ".edu"
 
 2. Download the last version (latest *Gurobi-9.1.1-win64.msi*) [from the site](https://www.gurobi.com/downloads/gurobi-optimizer-eula/).
 
