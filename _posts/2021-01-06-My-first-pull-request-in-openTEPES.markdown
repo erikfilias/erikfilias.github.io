@@ -1,13 +1,18 @@
-## Instalación de Gurobi en Windows
+## Installing GitHub Desktop to manage my commits
 
-1. Registrarse en la [web de Gurobi](https://pages.gurobi.com/registration).
+1. Sign up for GitHub in [GitHub webpage](https://github.com/join).
 
-		Account Type: Academic
-		Email Address: la del IIT o de la escuela, pero tiene que terminar en ".edu"
+		Username: 
+		Email Address:
+		Password:
 
-2. Descargar la última versión (actualmente *Gurobi-8.1.1-win64.msi*) [desde la web](https://www.gurobi.com/downloads/gurobi-optimizer-eula/).
+2. Download GitHub Desktop [from the web](https://desktop.github.com/).
 
-4. Instalar Gurobi desde el ejecutable descargado.
+4. Install GitHub Desktop using the downloaded executable.
+
+4. Log in at GitHub Desktop using your username and password.
+
+## Clone a GitHub Repository
 
 5. Pedir una [licencia académica](https://www.gurobi.com/es/downloads/end-user-license-agreement-academic/).
 
