@@ -12,7 +12,7 @@
 
 5. Log in at GitHub Desktop using your username and password.
 
-## Example: Contribute to an existing repository
+## Contribute to an existing repository
 
 ### Download a repository on GitHub.com to our machine
 
