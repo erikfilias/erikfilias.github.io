@@ -70,7 +70,7 @@ This process inserts our most advanced changes made in the created branch to the
 		--> In case that you are the owner, you can make the merge by yourselft.
 		--> Deleted the merged branch both in the web version and GitHub Desktop.
 
-### Update our computer version of the repository by pulling changes from github
+### Update our version of the repository by pulling changes from github
 
 This process will update the version of the respository that you have in your computer with new ones located in the web.
 
