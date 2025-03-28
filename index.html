@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Erik F. Alvarez</title>
@@ -15,6 +16,42 @@
         line-height: 1.6;
 <!--        text-align: center; /* This centers text inside the body */-->
         }
+
+
+      .top-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em 2em;
+        border-bottom: 1px solid #eee;
+      }
+
+      .left-icons a {
+        margin-right: 10px;
+        color: black;
+        text-decoration: none;
+        font-size: 1.2em;
+      }
+
+      .nav-links a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: black;
+        font-weight: 400;
+      }
+
+      .nav-links a.active,
+      .nav-links a:hover {
+        color: mediumvioletred;
+        font-weight: bold;
+      }
+
+      h1.name {
+        text-align: center;
+        font-size: 2.6em;
+        margin-top: 1em;
+      }
+        
       .name {
         font-family: 'Poppins', sans-serif;
         font-size: 2.8em;
@@ -29,6 +66,24 @@
   </style>
 </head>
 <body>
+<header class="top-nav">
+  <div class="left-icons">
+    <a href="mailto:you@example.com" title="Email"><i class="fas fa-envelope"></i></a>
+    <a href="https://orcid.org/your-id" title="ORCID"><i class="fab fa-orcid"></i></a>
+    <a href="https://scholar.google.com/your-scholar" title="Google Scholar"><i class="fab fa-google"></i></a>
+    <a href="https://github.com/yourusername" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://linkedin.com/in/yourprofile" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://twitter.com/yourhandle" title="Twitter"><i class="fab fa-twitter"></i></a>
+  </div>
+
+  <nav class="nav-links">
+    <a href="#about" class="active">about</a>
+    <a href="#publications">publications</a>
+    <a href="#projects">projects</a>
+    <a href="cv.pdf">cv</a>
+  </nav>
+</header>
+
   <h1 class="name"><span class="firstname">Erik F. Alvarez</span> <span class="lastname"></span></h1>
 <!--  <p>I'm a researcher at RISE working on optimization and planning of power systems.</p>-->
   <p><a href="https://www.ri.se/sv/">RISE Research Institutes of Sweden</a></p>
