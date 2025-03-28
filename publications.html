@@ -7,61 +7,49 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" href="favicon.png" />
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'EB Garamond', serif;
-      max-width: 700px;
-      margin: 2em auto;
-      padding: 0 1em;
-      line-height: 1.6;
-      color: #222;
-    }
+<style>
+  .publication {
+    margin: 1.5em 0;
+    text-indent: -1.5em;
+    padding-left: 1.5em;
+  }
 
-    h1 {
-      text-align: center;
-      font-size: 2.2em;
-      margin-bottom: 1em;
-    }
+  .publication .buttons {
+    margin-top: 0.3em;
+  }
 
-    h2 {
-      color: #007e7a; /* blue esmeralda */
-      font-size: 1.4em;
-      margin-top: 2em;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 0.2em;
-    }
+  .publication button {
+    font-size: 0.8em;
+    margin-right: 0.5em;
+    padding: 0.3em 0.6em;
+    background-color: #007e7a;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
 
-    .publication {
-      margin: 0.8em 0;
-      text-indent: -1.5em;
-      padding-left: 1.5em;
-    }
+  .publication button:hover {
+    background-color: #005f5c;
+  }
 
-    .publication a {
-      color: #007e7a;
-      text-decoration: none;
-    }
+  .abstract, .bibtex {
+    display: none;
+    background-color: #f9f9f9;
+    padding: 0.8em;
+    margin-top: 0.5em;
+    font-size: 0.95em;
+    border-left: 3px solid #007e7a;
+  }
+</style>
 
-    .publication a:hover {
-      text-decoration: underline;
-    }
+<script>
+  function toggle(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === "block" ? "none" : "block";
+  }
+</script>
 
-    nav {
-      text-align: right;
-      margin-bottom: 2em;
-    }
-
-    nav a {
-      margin-left: 15px;
-      text-decoration: none;
-      color: black;
-    }
-
-    nav a.active {
-      color: mediumvioletred;
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
 
@@ -75,7 +63,27 @@
 
   <h2>2024</h2>
   <div class="publication">
-    E.F. Alvarez, J.C. López, L. Olmos, A. Ramos. <em>An optimal expansion planning of power systems considering cycle-based AC optimal power flow</em>. Sustainable Energy, Grids and Networks. <a href="https://doi.org/10.1016/j.segan.2023.101413" target="_blank">doi:10.1016/j.segan.2023.101413</a>
+    E.F. Alvarez, J.C. López, et al. <em>An optimal expansion planning of power systems considering cycle-based AC optimal power flow</em>. SEGAN, 2024.
+    <a href="https://doi.org/10.1016/j.segan.2023.101413" target="_blank">doi</a>
+
+    <div class="buttons">
+      <button onclick="toggle('abs1')">ABS</button>
+      <button onclick="toggle('bib1')">BIB</button>
+    </div>
+
+    <div class="abstract" id="abs1">
+      This paper proposes a transmission expansion planning model that incorporates a cycle-based formulation of AC optimal power flow...
+    </div>
+
+    <div class="bibtex" id="bib1">
+      @article{alvarez2024acopf,<br>
+      &nbsp;&nbsp;title={An optimal expansion planning of power systems considering cycle-based AC optimal power flow},<br>
+      &nbsp;&nbsp;author={Alvarez, E.F. and López, J.C. and Olmos, L. and Ramos, A.},<br>
+      &nbsp;&nbsp;journal={Sustainable Energy, Grids and Networks},<br>
+      &nbsp;&nbsp;year={2024},<br>
+      &nbsp;&nbsp;doi={10.1016/j.segan.2023.101413}<br>
+      }
+    </div>
   </div>
 
   <div class="publication">
