@@ -90,6 +90,40 @@
           border-radius: 8px;
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
+
+       .publication {
+          margin: 1.5em 0;
+          text-indent: -1.5em;
+          padding-left: 1.5em;
+        }
+
+        .publication .buttons {
+          margin-top: 0.3em;
+        }
+
+        .publication button {
+          font-size: 0.8em;
+          margin-right: 1.5em;
+          padding: 0.3em 0.6em;
+          background-color: #007e7a;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .publication button:hover {
+          background-color: #007e7a;
+        }
+
+        .abstract, .bibtex {
+          display: none;
+          background-color: #f9f9f9;
+          padding: 2.0em;
+          margin-top: 0.5em;
+          font-size: 0.95em;
+          border-left: 3px solid #007e7a;
+        }
   </style>
 </head>
 <body>
@@ -158,6 +192,60 @@
   <p>Coming soon...</p>
 
   <h2>Selected Publications</h2>
-  <p>Coming soon...</p>
+
+
+  <div class="publication">
+    <b>Erik F. Alvarez</b>, Miguel Paredes, and Marcos J. Rider. <em>Semidefinite relaxation and generalised benders decomposition to solve the transmission expansion network and reactive power planning</em>. IET Generation, Transmission & Distribution, 2020.
+    <a href="https://doi.org/10.1049/iet-gtd.2019.0331" target="_blank">DOI</a>
+    <div class="buttons">
+      <button onclick="toggle('abs8')">ABS</button>
+      <button onclick="toggle('bib8')">BIB</button>
+    </div>
+
+    <div class="abstract" id="abs8">
+        This study presents a methodology to solve simultaneously the alternating current (AC) transmission network expansion and reactive power planning problems, considering multiple stages and operating conditions. A mixed-integer non-linear programming model for the proposed planning problem is presented and rewritten with semidefinite structures. Then, the generalised Benders decomposition is used to separate the overall problem into an upper-level (master) problem and several lower-level (slaves) problems. The master problem is a mixed-integer linear programming problem that optimises the investment cost and constraints of the multistage expansion. Each slave problem minimises the operating costs associated with each stage and operating condition (normal operation or contingency), considering the AC power flow via semidefinite relaxation. With the proposed methodology, the global optimality of generalised Benders decomposition can be preserved due to the use of semidefinite relaxation in each slave problem. Garver's 6-bus system and an IEEE 118-bus system are used to show the precision and convergence to near-global optimal solutions with small relaxation gaps through the proposed approach.
+    </div>
+
+    <div class="bibtex" id="bib8">
+      @article{Alvarez20190331,<br>
+        author = {Alvarez, Erik F. and Paredes, Miguel and Rider, Marcos J.},<br>
+        title = {Semidefinite relaxation and generalised benders decomposition to solve the transmission expansion network and reactive power planning},<br>
+        journal = {IET Generation, Transmission \& Distribution},<br>
+        volume = {14},<br>
+        number = {11},<br>
+        pages = {2160-2168},<br>
+        doi = {https://doi.org/10.1049/iet-gtd.2019.0331},<br>
+        year = {2020}<br>
+      }
+    </div>
+  </div>
+
+  <div class="publication">
+    <b>Erik F. Alvarez</b>, Juan Camilo López, Pedro P. Vergara, Jefferson J. Chavez and Marcos J. Rider. <em>A Stochastic Market-Clearing Model Using Semidefinite Relaxation</em>. 2019 IEEE Milan PowerTech, 2019.
+    <a href="10.1109/PTC.2019.8810418" target="_blank">DOI</a>
+    <div class="buttons">
+      <button onclick="toggle('abs10')">ABS</button>
+      <button onclick="toggle('bib10')">BIB</button>
+    </div>
+
+    <div class="abstract" id="abs10">
+        This paper proposes a two-stage stochastic market clearing (SMC) model based on a semidefinite programming (SDP) relaxation. The SMC model aims at determining the day-ahead schedule (DA) and the real-time (RT) balance settlement that minimize the total expected production cost. The network capacity constraints are considered in the proposed model through an AC power flow formulation, while the uncertainty in the renewable-based generation is taking into account using a set of stochastic scenarios. In order to solve the proposed non-linear programming model, a SDP relaxation is used. An illustrative example (3-bus test system) and the IEEE Reliability 24-bus test system are used to show the effectiveness and accuracy of the proposed model. Results shown that the proposed SDP relaxation introduce a negligible error, when compared with the solution after solving the original non-linear model.
+    </div>
+
+    <div class="bibtex" id="bib10">
+      @INPROCEEDINGS{8810418,<br>
+        author={Alvarez, Erik F. and López, Juan C. and Vergara, Pedro P. and Chavez, Jefferson J. and Rider, Marcos J.},<br>
+        booktitle={2019 IEEE Milan PowerTech},<br>
+        title={A Stochastic Market-Clearing Model Using Semidefinite Relaxation},<br>
+        year={2019},<br>
+        volume={},<br>
+        number={},<br>
+        pages={1-6},<br>
+        keywords={Reactive power;Wind power generation;Real-time systems;Generators;Light rail systems;Programming;Stochastic processes;Stochastic market-clearing;AC optimal power flow;semidefinite relaxation},<br>
+        doi={10.1109/PTC.2019.8810418}<br>
+      }
+    </div>
+  </div>
+
 </body>
 </html>
