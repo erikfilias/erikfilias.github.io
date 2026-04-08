@@ -894,6 +894,8 @@ async function initMap() {
 
   const svg = d3.select(container).append("svg")
     .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("width", W)
+    .attr("height", H)
     .style("width","100%").style("height","auto");
 
   // Tight bbox: Nordic region + enough of UK/Germany to show cross-border lines
@@ -987,7 +989,13 @@ async function initMap() {
   svg.on("click", () => closeDetail());
 }
 
-initMap();
+initMap().catch(e => {
+  const c = document.getElementById("map-container");
+  c.innerHTML = `<div style="padding:2rem;color:#c00;font-size:0.85em">
+    <strong>Map error:</strong> ${e.message}<br>
+    <small style="opacity:0.7">${e.stack ? e.stack.split('\n').slice(0,3).join('<br>') : ''}</small>
+  </div>`;
+});
 renderTable();
 </script>
 </body>
