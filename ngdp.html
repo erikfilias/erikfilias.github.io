@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive map of Nordic Grid Development Perspective 2025 — transmission grid investment projects across Norway, Sweden, Finland and Denmark.">
+  <title>NGDP 2025 | Erik F. Alvarez</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --accent:       #007e7a;
+      --bg:           #f7f6f2;
+      --surface:      #ffffff;
+      --commissioned: #1a1a1a;
+      --construction: #8b2254;
+      --planned:      #4a7c3a;
+      --text:         #1a1a1a;
+      --muted:        #666;
+      --border:       #e0e0e0;
+      --mono:         'DM Mono', ui-monospace, monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Nav (matches index.html exactly) ─────────────────────────────── */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 2em;
+      border-bottom: 1px solid #eee;
+      background: var(--surface);
+    }
+    .left-icons a {
+      margin-right: 10px;
+      color: black;
+      text-decoration: none;
+      font-size: 1.2em;
+    }
+    .nav-links a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: black;
+      font-weight: 400;
+    }
+    .nav-links a.active,
+    .nav-links a:hover {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* ── Content wrapper ──────────────────────────────────────────────── */
+    .content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2em 1.5em;
+    }
+
+    /* ── Page header ──────────────────────────────────────────────────── */
+    .page-header { margin-bottom: 1.8em; }
+    .page-header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 600;
+      margin-bottom: 0.45em;
+    }
+    .page-header p {
+      font-size: 0.95em;
+      color: var(--muted);
+      max-width: 780px;
+      margin-bottom: 0.6em;
+    }
+    .source-link {
+      font-family: var(--mono);
+      font-size: 0.76em;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }
+
+    /* ── Stat cards ───────────────────────────────────────────────────── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.4em;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
+    }
+    .stat-card .eyebrow {
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.35em;
+    }
+    .stat-card .big {
+      font-family: var(--mono);
+      font-size: 1.9rem;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: 0.2em;
+    }
+    .stat-card .sub { font-size: 0.78em; color: var(--muted); }
+    .stat-card.total   .big { color: var(--accent); }
+    .stat-card.comm    .big { color: var(--commissioned); }
+    .stat-card.constr  .big { color: var(--construction); }
+    .stat-card.planned .big { color: var(--planned); }
+
+    /* ── TSO investment cards ─────────────────────────────────────────── */
+    .tso-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.8em;
+    }
+    .tso-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
+    }
+    .tso-card .tso-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.3em;
+    }
+    .tso-card .tso-amount {
+      font-family: var(--mono);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 0.15em;
+    }
+    .tso-card .tso-note { font-size: 0.76em; color: var(--muted); }
+
+    /* ── Filter controls ──────────────────────────────────────────────── */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      margin-bottom: 1.4em;
+      align-items: center;
+    }
+    .filter-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+    .filter-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .pill {
+      padding: 0.22rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      cursor: pointer;
+      font-family: Georgia, serif;
+      font-size: 0.8em;
+      color: var(--accent);
+      transition: background 0.13s, color 0.13s;
+    }
+    .pill.active, .pill:hover { background: var(--accent); color: #fff; }
+
+    /* ── Map + detail layout ──────────────────────────────────────────── */
+    .map-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1.2em;
+    }
+    @media (min-width: 820px) {
+      .map-layout.panel-open { grid-template-columns: 1fr 310px; }
+    }
+
+    #map-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      min-height: 380px;
+    }
+    #map-container svg { display: block; width: 100%; height: auto; }
+    #map-loading {
+      display: flex; align-items: center; justify-content: center;
+      height: 420px; color: var(--muted); font-size: 0.88em;
+    }
+
+    /* ── Detail panel ─────────────────────────────────────────────────── */
+    #detail-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.4rem;
+      position: relative;
+    }
+    #detail-panel.open { display: block; }
+
+    .detail-close {
+      position: absolute; top: 0.7rem; right: 0.8rem;
+      background: none; border: none; cursor: pointer;
+      font-size: 1rem; color: var(--muted); line-height: 1;
+    }
+    .detail-close:hover { color: var(--text); }
+    .d-id {
+      font-family: var(--mono);
+      font-size: 0.68em;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.25em;
+    }
+    .d-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.6em;
+      padding-right: 1.5rem;
+    }
+    .status-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.66em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.18em 0.55em;
+      border-radius: 3px;
+      margin-bottom: 1em;
+      color: #fff;
+    }
+    .status-badge.commissioned { background: var(--commissioned); }
+    .status-badge.construction { background: var(--construction); }
+    .status-badge.planned      { background: var(--planned); }
+
+    .d-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin-bottom: 0.9em;
+      font-size: 0.83em;
+    }
+    .d-meta-item .mi-label {
+      font-family: var(--mono);
+      font-size: 0.68em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.1em;
+    }
+    .d-meta-item .mi-val { font-weight: 500; }
+    .d-desc {
+      font-size: 0.85em;
+      color: #333;
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75em;
+    }
+
+    /* ── Legend ───────────────────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      margin-bottom: 2em;
+      font-size: 0.82em;
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.45rem; }
+    .leg-line {
+      width: 26px; height: 3px; border-radius: 2px; flex-shrink: 0;
+    }
+    .leg-line.planned {
+      background: repeating-linear-gradient(
+        90deg,
+        var(--planned) 0, var(--planned) 5px,
+        transparent 5px, transparent 8px
+      );
+      height: 2px;
+    }
+
+    /* ── Table section ────────────────────────────────────────────────── */
+    .table-section h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.8em;
+    }
+    .table-controls {
+      display: flex; gap: 0.6rem; margin-bottom: 0.75em;
+      flex-wrap: wrap; align-items: center;
+    }
+    .table-controls select {
+      font-family: Georgia, serif;
+      font-size: 0.82em;
+      padding: 0.28em 0.55em;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface);
+      cursor: pointer;
+    }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.83em; }
+    th {
+      font-family: var(--mono);
+      font-size: 0.68em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      padding: 0.55em 0.75em;
+      text-align: left;
+      border-bottom: 2px solid var(--border);
+      cursor: pointer;
+      white-space: nowrap;
+      background: var(--bg);
+      user-select: none;
+    }
+    th:hover, th.active { color: var(--accent); }
+    td {
+      padding: 0.55em 0.75em;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:hover td { background: #f0fafa; cursor: pointer; }
+    tr.selected td { background: #e3f4f4; }
+    .td-id { font-family: var(--mono); font-size: 0.78em; color: var(--muted); white-space: nowrap; }
+    .td-status { white-space: nowrap; }
+    .sdot {
+      display: inline-block; width: 8px; height: 8px;
+      border-radius: 50%; margin-right: 4px; vertical-align: middle;
+    }
+    .sdot.commissioned { background: var(--commissioned); }
+    .sdot.construction { background: var(--construction); }
+    .sdot.planned      { background: var(--planned); }
+
+    /* ── Tooltip ──────────────────────────────────────────────────────── */
+    #tooltip {
+      position: fixed; display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.55rem 0.85rem;
+      font-size: 0.8em;
+      pointer-events: none;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 240px;
+    }
+    .tt-id  { font-family: var(--mono); font-size: 0.7em; color: var(--muted); }
+    .tt-name { font-weight: 600; margin: 0.1em 0; }
+    .tt-status { font-family: var(--mono); font-size: 0.7em; text-transform: uppercase; }
+
+    /* ── Map SVG elements ─────────────────────────────────────────────── */
+    .country-fill    { transition: opacity 0.15s; }
+    .country-nordic  { fill: #cce5ed; stroke: #999; stroke-width: 0.6; }
+    .country-neighbor{ fill: #e8e8e8; stroke: #bbb; stroke-width: 0.4; }
+    .country-other   { fill: #f2f2f2; stroke: #ddd; stroke-width: 0.3; }
+    .project-line    { fill: none; stroke-linecap: round; pointer-events: none; }
+    .project-hit     { fill: transparent; stroke: transparent; stroke-width: 14; cursor: pointer; }
+    .zone-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      fill: #555;
+      pointer-events: none;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────────────── */
+    footer {
+      max-width: 1100px;
+      margin: 3em auto 2em;
+      padding: 1em 1.5em;
+      border-top: 1px solid var(--border);
+      font-size: 0.76em;
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      .content  { padding: 1.25rem; }
+      .controls { gap: 0.7rem; }
+      .d-meta   { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<header class="top-nav">
+  <div class="left-icons">
+    <a href="mailto:erik.alvarez@ri.se" title="Email"><i class="fas fa-envelope"></i></a>
+    <a href="https://orcid.org/0000-0003-3862-9747" title="ORCID"><i class="fab fa-orcid"></i></a>
+    <a href="https://scholar.google.com/citations?user=iextGGkAAAAJ&hl=en" title="Google Scholar"><i class="fab fa-google"></i></a>
+    <a href="https://github.com/erikfilias" title="GitHub"><i class="fab fa-github"></i></a>
+    <a href="https://www.linkedin.com/in/erik-alvarez-29235b84/" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">about</a>
+    <a href="ngdp.html" class="active">NGDP 2025</a>
+    <a href="publications.html">publications</a>
+    <a href="CV - Erik Alvarez.pdf">cv</a>
+  </nav>
+</header>
+
+<main class="content">
+
+  <!-- ── Page header ─────────────────────────────────────────────────────── -->
+  <section class="page-header">
+    <h1>Nordic Grid Development Perspective 2025</h1>
+    <p>
+      Interactive overview of the major transmission grid investment projects in the Nordic Grid
+      Development Perspective 2025, published by the four Nordic TSOs (Svenska Kraftnät, Energinet,
+      Fingrid, Statnett) in June 2025. Covers 49 cross-border and national projects across Norway,
+      Sweden, Finland and Denmark, plus key interconnections to Germany, the UK and the Baltic states.
+    </p>
+    <a class="source-link"
+       href="https://www.svk.se/49e775/contentassets/cf866a8ab9dc42fa81e618ef69541a4e/nordic-grid-development---final.pdf"
+       target="_blank" rel="noopener">
+      Source: NGDP 2025 report (PDF) ↗
+    </a>
+  </section>
+
+  <!-- ── Summary stat cards ───────────────────────────────────────────────── -->
+  <div class="stat-grid">
+    <div class="stat-card total">
+      <div class="eyebrow">Total projects</div>
+      <div class="big">49</div>
+      <div class="sub">Grid investments mapped</div>
+    </div>
+    <div class="stat-card comm">
+      <div class="eyebrow">Commissioned</div>
+      <div class="big">1</div>
+      <div class="sub">In operation since NGDP 2023</div>
+    </div>
+    <div class="stat-card constr">
+      <div class="eyebrow">Under construction</div>
+      <div class="big">12</div>
+      <div class="sub">Active or starting 2025–2026</div>
+    </div>
+    <div class="stat-card planned">
+      <div class="eyebrow">Planned</div>
+      <div class="big">36</div>
+      <div class="sub">In planning or under consideration</div>
+    </div>
+  </div>
+
+  <!-- ── TSO investment overview ──────────────────────────────────────────── -->
+  <div class="tso-grid">
+    <div class="tso-card">
+      <div class="tso-name">Energinet · Denmark</div>
+      <div class="tso-amount">~5.4 bn€</div>
+      <div class="tso-note">2025–2028 · 80% reinforcements</div>
+    </div>
+    <div class="tso-card">
+      <div class="tso-name">Fingrid · Finland</div>
+      <div class="tso-amount">~400 M€/yr</div>
+      <div class="tso-note">2024–2033 · 6,100 km new lines</div>
+    </div>
+    <div class="tso-card">
+      <div class="tso-name">Statnett · Norway</div>
+      <div class="tso-amount">~12.5 bn€</div>
+      <div class="tso-note">Next decade · 300→420 kV upgrades</div>
+    </div>
+    <div class="tso-card">
+      <div class="tso-name">Svenska Kraftnät · Sweden</div>
+      <div class="tso-amount">~5.2 bn€</div>
+      <div class="tso-note">2026–2028 · 1,500 km new lines</div>
+    </div>
+  </div>
+
+  <!-- ── Filter controls ──────────────────────────────────────────────────── -->
+  <div class="controls" id="filters">
+    <div class="filter-group">
+      <span class="filter-label">Status</span>
+      <button class="pill active" data-f="status" data-v="all">All</button>
+      <button class="pill" data-f="status" data-v="commissioned">Commissioned</button>
+      <button class="pill" data-f="status" data-v="construction">Under construction</button>
+      <button class="pill" data-f="status" data-v="planned">Planned</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Type</span>
+      <button class="pill active" data-f="type" data-v="all">All</button>
+      <button class="pill" data-f="type" data-v="cross-border">Cross-border</button>
+      <button class="pill" data-f="type" data-v="national">National</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Country</span>
+      <button class="pill active" data-f="country" data-v="all">All</button>
+      <button class="pill" data-f="country" data-v="NO">Norway</button>
+      <button class="pill" data-f="country" data-v="SE">Sweden</button>
+      <button class="pill" data-f="country" data-v="FI">Finland</button>
+      <button class="pill" data-f="country" data-v="DK">Denmark</button>
+    </div>
+  </div>
+
+  <!-- ── Map + detail panel ───────────────────────────────────────────────── -->
+  <div class="map-layout" id="map-layout">
+    <div id="map-container">
+      <div id="map-loading">Loading map…</div>
+    </div>
+    <div id="detail-panel">
+      <button class="detail-close" id="detail-close">✕</button>
+      <div class="d-id"   id="d-id"></div>
+      <div class="d-name" id="d-name"></div>
+      <span class="status-badge" id="d-badge"></span>
+      <div class="d-meta">
+        <div class="d-meta-item">
+          <div class="mi-label">Corridor / Zone</div>
+          <div class="mi-val" id="d-corridor"></div>
+        </div>
+        <div class="d-meta-item">
+          <div class="mi-label">Technology</div>
+          <div class="mi-val" id="d-tech"></div>
+        </div>
+        <div class="d-meta-item">
+          <div class="mi-label">Timeline</div>
+          <div class="mi-val" id="d-timeline"></div>
+        </div>
+        <div class="d-meta-item">
+          <div class="mi-label">TSO</div>
+          <div class="mi-val" id="d-tso"></div>
+        </div>
+      </div>
+      <div class="d-desc" id="d-desc"></div>
+    </div>
+  </div>
+
+  <!-- ── Legend ───────────────────────────────────────────────────────────── -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="leg-line" style="background:var(--commissioned)"></div>
+      <span>Commissioned</span>
+    </div>
+    <div class="legend-item">
+      <div class="leg-line" style="background:var(--construction)"></div>
+      <span>Under construction</span>
+    </div>
+    <div class="legend-item">
+      <div class="leg-line planned"></div>
+      <span>Planned / under consideration</span>
+    </div>
+    <div class="legend-item" style="margin-left:1rem; color:var(--muted); font-size:0.78em">
+      Click a line to see project details
+    </div>
+  </div>
+
+  <!-- ── Table section ────────────────────────────────────────────────────── -->
+  <section class="table-section">
+    <h2>All projects</h2>
+    <div class="table-controls">
+      <select id="sort-col">
+        <option value="id">Sort by ID</option>
+        <option value="name">Sort by name</option>
+        <option value="status">Sort by status</option>
+        <option value="country">Sort by country</option>
+        <option value="timeline">Sort by timeline</option>
+      </select>
+      <select id="sort-dir">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table id="proj-table">
+        <thead>
+          <tr>
+            <th data-col="id">ID</th>
+            <th data-col="name">Project</th>
+            <th data-col="status">Status</th>
+            <th data-col="country">Country</th>
+            <th data-col="tech">Technology</th>
+            <th data-col="timeline">Timeline</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Data source: Nordic Grid Development Perspective 2025, published June 2025 by Svenska Kraftnät,
+  Energinet, Fingrid, and Statnett.
+  Project line positions are approximate (centroid-to-centroid) and intended for communication only.
+  Investment costs per project are not published in NGDP 2025; figures shown are TSO-level planning totals.
+</footer>
+
+<div id="tooltip"></div>
+
+<!-- ── Libraries ──────────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════════
+
+const STATUS_LABEL = {
+  commissioned: "Commissioned",
+  construction:  "Under construction",
+  planned:       "Planned / under consideration",
+};
+
+const COUNTRY_LABEL = {
+  CB: "Cross-border", SE: "Sweden", FI: "Finland", NO: "Norway", DK: "Denmark",
+};
+
+const STATUS_COLOR = {
+  commissioned: "#1a1a1a",
+  construction:  "#8b2254",
+  planned:       "#4a7c3a",
+};
+
+// All 49 projects. from/to are [lon, lat] approximate endpoints.
+const PROJECTS = [
+  // ── Cross-border ────────────────────────────────────────────────────────
+  { id:"CB1",  name:"Aurora Line",
+    type:"cross-border", status:"construction", country:"CB",
+    from:[22.5,65.8], to:[25.5,65.5],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2025",
+    corridor:"SE1 – FI", tso:"SvK / Fingrid",
+    desc:"Third 400 kV AC connection between Finland and Sweden. PCI-status. Increases trading capacity and enables power adequacy support in Finland." },
+
+  { id:"CB2",  name:"Aurora Line 2",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[21.5,63.5], to:[24.5,63.5],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2034",
+    corridor:"SE1 – FI", tso:"SvK / Fingrid",
+    desc:"Fourth AC connection between Finland and Sweden. Under bilateral studies and in the European TYNDP process." },
+
+  { id:"CB3",  name:"Svartbyn – Keminmaa reinforcement",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[22.3,65.7], to:[24.5,65.8],
+    tech:"AC 400 kV", timeline:"Planning",
+    corridor:"SE1 – FI (northern corridor)", tso:"SvK / Fingrid",
+    desc:"Reinforcement of the northern SE–FI corridor. Other technical solutions are under consideration." },
+
+  { id:"CB4",  name:"EstLink 3",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[25.0,59.9], to:[24.5,59.4],
+    tech:"DC HVDC subsea", timeline:"Latter part of 2030s",
+    corridor:"FI – EE", tso:"Fingrid",
+    desc:"Third DC link between Finland and Estonia. Includes 400 kV transmission network upgrade and extension to connect the EstLink 3 converter station." },
+
+  { id:"CB5",  name:"Fenno-Skan 3",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[17.8,60.5], to:[21.5,61.5],
+    tech:"DC HVDC subsea", timeline:"Planning / under consideration",
+    corridor:"SE3 – FI", tso:"SvK / Fingrid",
+    desc:"Renewal of Fenno-Skan 1, which is nearing end of lifetime. Bilateral studies ongoing; also investigated in TYNDP process." },
+
+  { id:"CB6",  name:"Increased capacity Norway – Finland",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[29.0,70.0], to:[27.5,68.7],
+    tech:"220 kV AC (BtB / upgrade under study)", timeline:"Planning / under consideration",
+    corridor:"NO4 – FI (Varangerbotn – Ivalo)", tso:"Statnett / Fingrid",
+    desc:"Current 220 kV line is difficult to control. Enhancement enables better market integration in far-north and increases security of supply." },
+
+  { id:"CB7",  name:"West Coast project",
+    type:"cross-border", status:"construction", country:"CB",
+    from:[8.7,55.5], to:[8.8,54.85],
+    tech:"AC 400 kV double circuit OHL + UGC", timeline:"Expected in operation 2026",
+    corridor:"DK1 – DE (Endrup – Klixbüll)", tso:"Energinet",
+    desc:"New 400 kV double circuit from Endrup to the Danish/German border. Increases cross-border capacity from 2,500 MW to 3,500 MW." },
+
+  { id:"CB8",  name:"Reinvestment Øresund (System 2)",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[12.5,55.7], to:[13.1,55.6],
+    tech:"AC 400 kV", timeline:"Construction from 2026, commissioning late 2026",
+    corridor:"DK2 – SE4", tso:"Energinet / SvK",
+    desc:"Reinvestment of the 400 kV Øresund System 2 connection. Construction starts early 2026; commissioning late 2026." },
+
+  { id:"CB9",  name:"Reinvestment Skagerrak 1&2",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[8.0,58.1], to:[9.5,57.5],
+    tech:"DC HVDC (reinvestment)", timeline:"Planning / under consideration",
+    corridor:"NO1 – DK1", tso:"Statnett / Energinet",
+    desc:"Possible reinvestment of Skagerrak 1 and 2, which are approaching end of technical lifetime. Studies ongoing; requires approval from both countries." },
+
+  { id:"CB10", name:"Reinvestment Konti-Skan",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[10.0,57.7], to:[11.8,57.5],
+    tech:"DC HVDC 1,000 MW (new cable)", timeline:"FID expected 2026/2027",
+    corridor:"DK1 – SE3", tso:"SvK / Energinet",
+    desc:"Renewal of Konti-Skan 1 and 2 with a new 1,000 MW cable (Konti-Skan Connect REI). Route studies and cost determination in progress." },
+
+  { id:"CB11", name:"Viking Link",
+    type:"cross-border", status:"commissioned", country:"CB",
+    from:[8.2,55.8], to:[-0.5,53.0],
+    tech:"DC HVDC 1,400 MW subsea", timeline:"In operation from late 2023",
+    corridor:"DK1 – GB", tso:"Energinet",
+    desc:"1,400 MW HVDC subsea cable connecting western Denmark to the UK. Operating at limited capacity pending West Coast Project reinforcement in western Denmark." },
+
+  { id:"CB12", name:"Bornholm Energy Island",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[14.9,55.2], to:[13.0,54.5],
+    tech:"Hybrid offshore (3 GW)", timeline:"Under consideration",
+    corridor:"DK – DE (Baltic Sea)", tso:"Energinet / 50Hertz",
+    desc:"Joint offshore project to connect 3 GW Baltic Sea offshore wind to both Danish and German markets. Next phase pending further Danish-German government dialogue." },
+
+  { id:"CB13", name:"North Sea Energy Island",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[5.5,56.5], to:[8.5,56.5],
+    tech:"Offshore energy hub (up to 10 GW)", timeline:"No firm commissioning date",
+    corridor:"North Sea – DK + neighbouring countries", tso:"Energinet",
+    desc:"Artificial energy island in the North Sea for up to 10 GW offshore wind with multiple international connections. Legal framework still being established." },
+
+  { id:"CB14", name:"Upgrade power line NO – SE",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[13.8,66.5], to:[17.5,65.3],
+    tech:"220 → 420 kV AC upgrade (OHL)", timeline:"Under consideration",
+    corridor:"NO4 (Nedre Røssåga) – SE2 (Grundfors)", tso:"SvK / Statnett",
+    desc:"Upgrading existing 220 kV line to 420 kV shows significant benefits in all scenarios. Bilateral studies continuing." },
+
+  { id:"CB15", name:"Hybrid connections (offshore wind)",
+    type:"cross-border", status:"planned", country:"CB",
+    from:[5.0,57.8], to:[5.7,58.5],
+    tech:"HVDC hybrid (2.8 GW offshore)", timeline:"Under consideration",
+    corridor:"North Sea – NO2", tso:"Statnett",
+    desc:"Investigation of hybrid connections for 2.8 GW offshore wind in southern North Sea combined with planned onshore reinforcements in NO2." },
+
+  // ── Sweden ───────────────────────────────────────────────────────────────
+  { id:"S1", name:"Nord-Syd",
+    type:"national", status:"construction", country:"SE",
+    from:[15.5,62.0], to:[15.5,59.5],
+    tech:"AC 400 kV (replaces 220 kV)", timeline:"In operation 2027–2040 (phased)",
+    corridor:"SE2 – SE3", tso:"Svenska Kraftnät",
+    desc:"~50 sub-projects increasing SE2–SE3 capacity from 7,300 MW to over 10,000 MW. Includes ~2,000 km OHL and 35 substations." },
+
+  { id:"S2", name:"Stockholms Ström & Stockholm Väst",
+    type:"national", status:"construction", country:"SE",
+    from:[17.8,59.3], to:[17.5,59.6],
+    tech:"AC 400 kV", timeline:"Projects online through 2031",
+    corridor:"SE3 – Stockholm area", tso:"Svenska Kraftnät",
+    desc:"Series of projects to reinforce and reinvest the larger Stockholm area, replacing 220 kV with 400 kV lines." },
+
+  { id:"S3", name:"Gotlandsförbindelsen",
+    type:"national", status:"planned", country:"SE",
+    from:[16.7,57.5], to:[18.3,57.4],
+    tech:"AC 220 kV double circuit OHL", timeline:"Expected in operation 2031–2032",
+    corridor:"SE3 mainland (Misterhult) – Gotland (Stenkumla)", tso:"Svenska Kraftnät",
+    desc:"New 220 kV double circuit AC lines to mainland Sweden and Gotland. Seeking permission." },
+
+  { id:"S4", name:"Göteborg Norr",
+    type:"national", status:"construction", country:"SE",
+    from:[11.9,57.8], to:[12.3,58.2],
+    tech:"AC 400 kV OHL", timeline:"In operation 2026–2038",
+    corridor:"SE3 – Gothenburg north", tso:"Svenska Kraftnät",
+    desc:"Reinvestment and reinforcement with 400 kV AC lines. Increases capacity to the west of Sweden in SE3." },
+
+  { id:"S5", name:"Västkustpaketet",
+    type:"national", status:"construction", country:"SE",
+    from:[12.0,57.5], to:[12.5,57.0],
+    tech:"AC 400 kV", timeline:"In operation 2025–2031",
+    corridor:"SE3 – west coast", tso:"Svenska Kraftnät",
+    desc:"Connects new production sources and remedies limits on east-west power flows on the Swedish west coast." },
+
+  { id:"S6", name:"Skåne",
+    type:"national", status:"planned", country:"SE",
+    from:[13.5,56.2], to:[13.0,55.7],
+    tech:"AC 400 kV", timeline:"In operation 2038",
+    corridor:"SE4 – Malmö / northern Skåne", tso:"Svenska Kraftnät",
+    desc:"Three investment packages increasing renewable connection, redundancy around Malmö, and capacity towards continental interconnectors." },
+
+  { id:"S7", name:"SE1 reinforcements",
+    type:"national", status:"planned", country:"SE",
+    from:[20.0,67.0], to:[22.0,66.0],
+    tech:"AC 400 kV", timeline:"Seeking permission",
+    corridor:"SE1 – internal", tso:"Svenska Kraftnät",
+    desc:"Internal reinforcements in SE1 to connect new industrial consumers in northern Sweden." },
+
+  { id:"S8", name:"SE1 – SE2 reinforcement",
+    type:"national", status:"planned", country:"SE",
+    from:[20.0,65.5], to:[17.0,62.5],
+    tech:"AC 400 kV double circuit OHL, 250 km", timeline:"Expected in operation 2035",
+    corridor:"SE1 – SE2", tso:"Svenska Kraftnät",
+    desc:"Reinvestment and reinforcement of 250 km double circuit 400 kV OHL between SE1 and SE2." },
+
+  // ── Finland ──────────────────────────────────────────────────────────────
+  { id:"F1",  name:"Huittinen – Forssa",
+    type:"national", status:"construction", country:"FI",
+    from:[22.7,61.2], to:[23.6,60.8],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2025",
+    corridor:"Western Finland", tso:"Fingrid",
+    desc:"New 400 kV OHL between Huittinen and Forssa. Improves reliability and transmission capacity in western Finland." },
+
+  { id:"F2",  name:"Reinforcement of Lake Line",
+    type:"national", status:"construction", country:"FI",
+    from:[27.5,65.0], to:[27.0,62.5],
+    tech:"AC 400 kV single circuit OHL, 300 km", timeline:"Expected in operation 2026",
+    corridor:"Northern Finland (Nuojuankangas – Huutokoski)", tso:"Fingrid",
+    desc:"New 300 km 400 kV AC single circuit OHL. Series compensated." },
+
+  { id:"F3",  name:"Helsinki 400 kV cable",
+    type:"national", status:"construction", country:"FI",
+    from:[25.0,60.3], to:[24.9,60.1],
+    tech:"AC 400 kV cable", timeline:"Expected in operation 2026",
+    corridor:"Southern Finland – Helsinki area", tso:"Fingrid",
+    desc:"New 400 kV AC cable connection improving reliability and transmission capacity in southern Finland." },
+
+  { id:"F4",  name:"Herva – Nuojuankangas",
+    type:"national", status:"planned", country:"FI",
+    from:[26.5,66.0], to:[27.5,65.0],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2027",
+    corridor:"Northern Finland (P0 cut area)", tso:"Fingrid",
+    desc:"New 400 kV AC OHL between Herva and Nuojuankangas over the P0 cut. Series compensated." },
+
+  { id:"F5",  name:"Jylkkä – Alajärvi",
+    type:"national", status:"planned", country:"FI",
+    from:[21.5,63.5], to:[24.0,63.0],
+    tech:"AC 400 kV double circuit OHL, 150 km", timeline:"Expected in operation 2028",
+    corridor:"Western coast – Central Finland", tso:"Fingrid",
+    desc:"150 km 400 kV double circuit AC OHL from western coast to central Finland. Partly series compensated." },
+
+  { id:"F6",  name:"Kristiinankaupunki – Nokia",
+    type:"national", status:"planned", country:"FI",
+    from:[21.4,62.3], to:[23.5,61.5],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2029",
+    corridor:"SW Finland coast – Nokia", tso:"Fingrid",
+    desc:"New 400 kV connection. Wind power increasing on western coast; consumption increasing in the capital area." },
+
+  { id:"F7",  name:"Alajärvi – Toivila",
+    type:"national", status:"planned", country:"FI",
+    from:[24.0,63.0], to:[24.5,61.5],
+    tech:"AC 400 kV single circuit OHL, 150 km", timeline:"Expected in operation 2028",
+    corridor:"Central Finland – Tampere area", tso:"Fingrid",
+    desc:"150 km single circuit 400 kV AC OHL from Alajärvi to Toivila. Extension of Jylkkä–Alajärvi line. Partly series compensated." },
+
+  { id:"F8",  name:"Toivila – Hikiä",
+    type:"national", status:"planned", country:"FI",
+    from:[24.5,61.5], to:[25.3,60.6],
+    tech:"AC 400 kV double circuit OHL, 130 km", timeline:"Expected in operation 2028",
+    corridor:"Tampere area – Southern Finland", tso:"Fingrid",
+    desc:"400 kV double circuit AC OHL of 130 km from Toivila substation to Hikiä substation." },
+
+  { id:"F9",  name:"Reinforcement of Forest Line",
+    type:"national", status:"planned", country:"FI",
+    from:[27.8,65.0], to:[27.2,61.5],
+    tech:"AC 400 kV single circuit OHL, 300 km", timeline:"Expected in operation 2030",
+    corridor:"Northern – Southern Finland (Forest Line corridor)", tso:"Fingrid",
+    desc:"300 km 400 kV single circuit AC OHL parallel to the existing Forest Line. Series compensated." },
+
+  { id:"F10", name:"Hikiä – Anttila – Länsisalmi",
+    type:"national", status:"planned", country:"FI",
+    from:[25.3,60.6], to:[26.5,61.1],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2030",
+    corridor:"Southern Finland", tso:"Fingrid",
+    desc:"400 kV AC OHL improving reliability and transmission capacity in southern Finland." },
+
+  { id:"F11", name:"Hikiä – Kynnar – Inkoo",
+    type:"national", status:"planned", country:"FI",
+    from:[25.3,60.6], to:[24.0,60.0],
+    tech:"AC 400 kV single circuit OHL, 100 km", timeline:"Expected in operation 2031",
+    corridor:"Southern Finland coast (Hikiä – Inkoo)", tso:"Fingrid",
+    desc:"100 km single circuit 400 kV OHL reinforcing capacity for EstLink 3 and new industrial green investments." },
+
+  { id:"F12", name:"Ridge Line",
+    type:"national", status:"planned", country:"FI",
+    from:[28.0,64.5], to:[26.0,61.0],
+    tech:"AC 400 kV double circuit OHL, 450 km", timeline:"Expected in operation 2032",
+    corridor:"Kainuu – Southern Finland", tso:"Fingrid",
+    desc:"450 km 400 kV double circuit AC OHL from Kainuu region to southern Finland." },
+
+  { id:"F13", name:"Petäjäskoski – Herva",
+    type:"national", status:"planned", country:"FI",
+    from:[25.5,66.5], to:[26.5,66.0],
+    tech:"AC 400 kV OHL", timeline:"Expected in operation 2032",
+    corridor:"Northern Finland (P0 cut area)", tso:"Fingrid",
+    desc:"New 400 kV AC OHL between Petäjäskoski and Herva over the P0 cut in northern Finland." },
+
+  // ── Norway ───────────────────────────────────────────────────────────────
+  { id:"N1", name:"Finnmark",
+    type:"national", status:"construction", country:"NO",
+    from:[23.5,70.0], to:[29.0,70.5],
+    tech:"AC 420 kV OHL", timeline:"Skaidi–Hammerfest under construction; rest under application",
+    corridor:"NO4 – Eastern Finnmark (Skillemoen – Varangerbotn)", tso:"Statnett",
+    desc:"Extension of 420 kV grid across eastern Finnmark. Increases capacity and enables new consumption and production. Skaidi–Hammerfest is under construction; permission sought for Skaidi–Lebesby–Varangerbotn." },
+
+  { id:"N2", name:"Namos/Tunnsjedal – Nedre Røssåga",
+    type:"national", status:"planned", country:"NO",
+    from:[11.5,64.5], to:[13.8,66.5],
+    tech:"AC 420 kV OHL", timeline:"Planned / under consideration",
+    corridor:"NO3 – NO4 (Namsos – Nedre Røssåga)", tso:"Statnett",
+    desc:"Replacing the current 300 kV line between Verdal and Tunnsjedal with a new 420 kV line. Increases north-south capacity." },
+
+  { id:"N3", name:"Through Mid-Norway",
+    type:"national", status:"planned", country:"NO",
+    from:[9.5,63.3], to:[8.5,62.8],
+    tech:"AC 420 kV OHL", timeline:"Under planning",
+    corridor:"NO3 (Åfjord – Snilldal – Surna – Viklandet)", tso:"Statnett",
+    desc:"New 420 kV lines in Mid Norway to facilitate new wind production and increased consumption." },
+
+  { id:"N4", name:"Western Norway",
+    type:"national", status:"planned", country:"NO",
+    from:[7.1,61.2], to:[6.3,59.6],
+    tech:"AC 420 kV (voltage upgrade)", timeline:"Sub-projects in different phases",
+    corridor:"NO5 – Sogndal to Sauda", tso:"Statnett",
+    desc:"Voltage upgrades to 420 kV from Sogndal to Sauda. Increases north-south capacity and facilitates connections in Bergen and Haugesund areas." },
+
+  { id:"N5", name:"South – Eastern corridor",
+    type:"national", status:"planned", country:"NO",
+    from:[7.9,58.5], to:[9.5,59.5],
+    tech:"AC 420 kV OHL", timeline:"Planned / under consideration",
+    corridor:"NO2 – NO1 (Arendal area – Grenland)", tso:"Statnett",
+    desc:"New 420 kV line from Kristiansand/Arendal area to Grenland area. Increases capacity between southern and eastern Norway." },
+
+  { id:"N6", name:"Greater Oslo",
+    type:"national", status:"construction", country:"NO",
+    from:[10.7,59.9], to:[11.1,60.2],
+    tech:"AC 420 kV OHL + cable (renewal)", timeline:"Sub-projects through 2032",
+    corridor:"NO1 – Oslo area", tso:"Statnett",
+    desc:"Renewal and voltage upgrade of transmission lines, cables and stations in Greater Oslo. Increases capacity for consumption and transit through the area." },
+
+  { id:"N7", name:"Mid-Norway – Oslo",
+    type:"national", status:"planned", country:"NO",
+    from:[8.5,62.5], to:[10.5,60.5],
+    tech:"AC 420 kV (voltage upgrade)", timeline:"Planned / under consideration",
+    corridor:"NO3 – NO1 (Sunndalsøra – Oslo)", tso:"Statnett",
+    desc:"Voltage upgrade from Sunndalsøra to Oslo area. Increases north-south transmission capacity and enables new consumption and local production." },
+
+  // ── Denmark ──────────────────────────────────────────────────────────────
+  { id:"D1", name:"Idomlund – Endrup & Vestjylland",
+    type:"national", status:"construction", country:"DK",
+    from:[8.7,56.5], to:[8.7,55.5],
+    tech:"AC 400 kV double circuit OHL (partly UGC)", timeline:"Expected in operation 2026 (400 kV) / 2028 (150 kV)",
+    corridor:"DK1 – Western/Mid Jutland", tso:"Energinet",
+    desc:"New 400 kV double circuit from Idomlund to Endrup. Collects renewable production in Western and Mid Jutland for national and cross-border export." },
+
+  { id:"D2", name:"Nyt Elnet Aarhus – Aabenraa",
+    type:"national", status:"planned", country:"DK",
+    from:[9.1,57.1], to:[9.5,55.2],
+    tech:"AC 400 kV double circuit OHL (upgrade)", timeline:"Expected in operation 2033",
+    corridor:"DK1 – Trige/Aarhus to Kassø/Aabenraa", tso:"Energinet",
+    desc:"Upgrade of existing 400 kV OHL to double circuit between Kassø and Trige. Grid acceleration area connecting renewables with areas of high demand." },
+
+  { id:"D3", name:"Nyt Elnet Midtjylland – Vendsyssel",
+    type:"national", status:"planned", country:"DK",
+    from:[9.2,56.5], to:[10.0,57.3],
+    tech:"AC 400 kV double circuit OHL (upgrade)", timeline:"Expected in operation 2036",
+    corridor:"DK1 – Tjele to Vendsyssel", tso:"Energinet",
+    desc:"New 400 kV double circuit OHL between Tjele–Ferslev and Trige–Ferslev. Transports renewable production from Northern Jutland to demand and interconnectors." },
+
+  { id:"D4", name:"Ny Netstruktur i Nordjylland",
+    type:"national", status:"planned", country:"DK",
+    from:[9.5,57.2], to:[10.2,57.7],
+    tech:"AC 150 kV reinforcement", timeline:"Expected in operation 2031",
+    corridor:"DK1 – Northern Jutland", tso:"Energinet",
+    desc:"Reinforcing the 150 kV grid in northwest Jutland. Grid acceleration area transporting renewables from Northern Jutland to demand and interconnectors." },
+
+  { id:"D5", name:"Grønt net Sjælland – Lolland/Falster",
+    type:"national", status:"planned", country:"DK",
+    from:[12.0,55.7], to:[11.8,54.8],
+    tech:"AC 400 kV", timeline:"Expected in operation mid-2030s",
+    corridor:"DK2 – Copenhagen to Lolland-Falster", tso:"Energinet",
+    desc:"Upgrading and expanding the 400 kV grid between Copenhagen area and Lolland-Falster. Transports renewable production to Copenhagen and Sweden." },
+
+  { id:"D6", name:"Substations Kassø, Tjele, Revsing",
+    type:"national", status:"planned", country:"DK",
+    from:[8.9,55.5], to:[9.2,56.5],
+    tech:"Substation upgrades", timeline:"Expected in operation mid-2030s",
+    corridor:"DK1 – multiple locations in Jutland", tso:"Energinet",
+    desc:"Reinvestments and upgrading of larger substations at Kassø, Tjele and Revsing to meet requirements from renewable production connections." },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+
+const filters = { status:"all", type:"all", country:"all" };
+let selectedId   = null;
+let sortCol      = "id";
+let sortDir      = "asc";
+let linesSel     = null;   // d3 selection of visible lines
+
+function visible(p) {
+  if (filters.status  !== "all" && p.status  !== filters.status)  return false;
+  if (filters.type    !== "all" && p.type    !== filters.type)    return false;
+  if (filters.country !== "all" && p.country !== filters.country) return false;
+  return true;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DETAIL PANEL
+// ═══════════════════════════════════════════════════════════════════════════
+
+function showDetail(p) {
+  selectedId = p.id;
+
+  document.getElementById("d-id").textContent      = p.id;
+  document.getElementById("d-name").textContent    = p.name;
+  document.getElementById("d-corridor").textContent = p.corridor;
+  document.getElementById("d-tech").textContent    = p.tech;
+  document.getElementById("d-timeline").textContent = p.timeline;
+  document.getElementById("d-tso").textContent     = p.tso;
+  document.getElementById("d-desc").textContent    = p.desc;
+
+  const badge = document.getElementById("d-badge");
+  badge.textContent  = STATUS_LABEL[p.status];
+  badge.className    = "status-badge " + p.status;
+
+  document.getElementById("detail-panel").classList.add("open");
+  document.getElementById("map-layout").classList.add("panel-open");
+
+  if (linesSel) linesSel.classed("selected", d => d.properties.id === p.id);
+  document.querySelectorAll("tr[data-id]").forEach(tr => {
+    tr.classList.toggle("selected", tr.dataset.id === p.id);
+  });
+}
+
+function closeDetail() {
+  selectedId = null;
+  document.getElementById("detail-panel").classList.remove("open");
+  document.getElementById("map-layout").classList.remove("panel-open");
+  if (linesSel) linesSel.classed("selected", false);
+  document.querySelectorAll("tr[data-id]").forEach(tr => tr.classList.remove("selected"));
+}
+
+document.getElementById("detail-close").addEventListener("click", closeDetail);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════════════════════════════════════════
+
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest(".pill");
+  if (!btn) return;
+  const f = btn.dataset.f, v = btn.dataset.v;
+  filters[f] = v;
+  document.querySelectorAll(`[data-f="${f}"].pill`).forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  if (linesSel) linesSel.style("opacity", d => visible(d.properties) ? 1 : 0.07);
+  renderTable();
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderTable() {
+  sortCol = document.getElementById("sort-col").value;
+  sortDir = document.getElementById("sort-dir").value;
+
+  const rows = PROJECTS.filter(visible).sort((a, b) => {
+    const cmp = String(a[sortCol] || "").localeCompare(String(b[sortCol] || ""), undefined, {numeric:true});
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  document.getElementById("table-body").innerHTML = rows.map(p => `
+    <tr data-id="${p.id}" class="${selectedId === p.id ? "selected" : ""}">
+      <td class="td-id">${p.id}</td>
+      <td>${p.name}</td>
+      <td class="td-status"><span class="sdot ${p.status}"></span>${STATUS_LABEL[p.status]}</td>
+      <td>${COUNTRY_LABEL[p.country]}</td>
+      <td style="font-size:0.8em">${p.tech}</td>
+      <td style="font-size:0.8em">${p.timeline}</td>
+    </tr>
+  `).join("");
+
+  document.querySelectorAll("tr[data-id]").forEach(tr => {
+    tr.addEventListener("click", () => {
+      const p = PROJECTS.find(x => x.id === tr.dataset.id);
+      if (p) showDetail(p);
+    });
+  });
+}
+
+document.getElementById("sort-col").addEventListener("change", renderTable);
+document.getElementById("sort-dir").addEventListener("change", renderTable);
+
+// Column-header sort clicks
+document.querySelectorAll("th[data-col]").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (sortCol === col) {
+      sortDir = sortDir === "asc" ? "desc" : "asc";
+      document.getElementById("sort-dir").value = sortDir;
+    } else {
+      sortCol = col;
+      sortDir = "asc";
+      document.getElementById("sort-col").value = col;
+      document.getElementById("sort-dir").value = "asc";
+    }
+    document.querySelectorAll("th[data-col]").forEach(h => h.classList.remove("active"));
+    th.classList.add("active");
+    renderTable();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAP
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ISO 3166-1 numeric codes in world-atlas
+const NORDIC_IDS   = new Set([578,752,246,208]);           // NO,SE,FI,DK
+const NEIGHBOR_IDS = new Set([276,826,233,428,440,616,528,56,250]); // DE,GB,EE,LV,LT,PL,NL,BE,FR
+
+// Bidding zone label positions [lon, lat]
+const ZONE_LABELS = [
+  {id:"SE1",lon:20.5,lat:67.8},{id:"SE2",lon:16.5,lat:63.2},
+  {id:"SE3",lon:15.0,lat:59.5},{id:"SE4",lon:13.5,lat:56.0},
+  {id:"NO1",lon:10.3,lat:59.6},{id:"NO2",lon:6.2, lat:58.7},
+  {id:"NO3",lon:9.2, lat:63.6},{id:"NO4",lon:17.2,lat:69.2},
+  {id:"NO5",lon:6.3, lat:60.6},{id:"FI", lon:27.5,lat:64.8},
+  {id:"DK1",lon:9.3, lat:56.3},{id:"DK2",lon:12.1,lat:55.5},
+];
+
+async function initMap() {
+  const container = document.getElementById("map-container");
+  const W = container.offsetWidth || 700;
+  const H = Math.round(W * 1.1);   // ~1.10 matches Mercator aspect of 54–72 N, -6–34 E
+
+  container.innerHTML = "";
+
+  const svg = d3.select(container).append("svg")
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .style("width","100%")
+    .style("height","auto");
+
+  // Projection fitted to Nordic + surrounding region
+  const bbox = { type:"Feature", geometry:{
+    type:"Polygon",
+    coordinates:[[[-6,53],[34,53],[34,73],[-6,73],[-6,53]]]
+  }, properties:{} };
+
+  const proj = d3.geoMercator().fitExtent([[20,20],[W-20,H-20]], bbox);
+  const path = d3.geoPath().projection(proj);
+
+  // World topology
+  let world;
+  try {
+    world = await d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+  } catch(e) {
+    container.innerHTML = '<div style="padding:2rem;color:#666">Map failed to load. Check your network connection.</div>';
+    return;
+  }
+
+  const countries = topojson.feature(world, world.objects.countries);
+
+  // Country fills — layer order: fills → lines → hits → labels
+  svg.append("g").attr("class","countries")
+    .selectAll("path")
+    .data(countries.features)
+    .join("path")
+    .attr("class", d => {
+      const id = +d.id;
+      if (NORDIC_IDS.has(id))    return "country-fill country-nordic";
+      if (NEIGHBOR_IDS.has(id))  return "country-fill country-neighbor";
+      return "country-fill country-other";
+    })
+    .attr("d", path);
+
+  // Build GeoJSON features from project data
+  const features = PROJECTS.map(p => ({
+    type: "Feature",
+    properties: p,
+    geometry: { type:"LineString", coordinates:[p.from, p.to] }
+  }));
+
+  // Visible lines (pointer-events disabled — handled by hit layer)
+  linesSel = svg.append("g").attr("class","lines")
+    .selectAll("path")
+    .data(features)
+    .join("path")
+    .attr("class", d => "project-line status-" + d.properties.status)
+    .attr("d", path)
+    .attr("stroke", d => STATUS_COLOR[d.properties.status])
+    .attr("stroke-width", 2.2)
+    .attr("stroke-dasharray", d => d.properties.status === "planned" ? "5,3" : null)
+    .attr("pointer-events","none");
+
+  // Tooltip
+  const tt = d3.select("#tooltip");
+
+  // Hit areas (wide transparent stroke for easier clicking)
+  svg.append("g").attr("class","hits")
+    .selectAll("path")
+    .data(features)
+    .join("path")
+    .attr("class","project-hit")
+    .attr("d", path)
+    .on("mousemove", (event, d) => {
+      const p = d.properties;
+      tt.style("display","block")
+        .style("left",(event.clientX + 14)+"px")
+        .style("top", (event.clientY - 28)+"px")
+        .html(`<div class="tt-id">${p.id}</div>
+               <div class="tt-name">${p.name}</div>
+               <div class="tt-status" style="color:${STATUS_COLOR[p.status]}">${STATUS_LABEL[p.status]}</div>`);
+    })
+    .on("mouseleave", () => tt.style("display","none"))
+    .on("click", (event, d) => {
+      event.stopPropagation();
+      showDetail(d.properties);
+      renderTable();
+    });
+
+  // Zone labels (always on top)
+  svg.append("g").attr("class","zone-labels")
+    .selectAll("text")
+    .data(ZONE_LABELS)
+    .join("text")
+    .attr("class","zone-label")
+    .attr("x", d => proj([d.lon,d.lat])[0])
+    .attr("y", d => proj([d.lon,d.lat])[1])
+    .text(d => d.id);
+
+  // Click on empty map closes detail
+  svg.on("click", () => closeDetail());
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════
+
+initMap();
+renderTable();
+</script>
+
+</body>
+</html>
