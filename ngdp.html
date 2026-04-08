@@ -98,7 +98,7 @@
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 6px; overflow: hidden; min-height: 380px;
     }
-    #map-container svg { display: block; width: 100%; height: auto; }
+    #map-container svg { display: block; width: 100%; }
     #map-loading { display: flex; align-items: center; justify-content: center; height: 420px; color: var(--muted); font-size: 0.88em; }
 
     /* Detail panel */
@@ -894,9 +894,7 @@ async function initMap() {
 
   const svg = d3.select(container).append("svg")
     .attr("viewBox", `0 0 ${W} ${H}`)
-    .attr("width", W)
-    .attr("height", H)
-    .style("width","100%").style("height","auto");
+    .attr("width", "100%");
 
   // Tight bbox: Nordic region + enough of UK/Germany to show cross-border lines
   const bbox = {type:"Feature",geometry:{type:"Polygon",
