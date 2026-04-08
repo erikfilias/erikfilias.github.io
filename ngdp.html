@@ -912,10 +912,14 @@ async function initMap() {
   // All map content in one group so zoom transforms everything together
   const mapGroup = svg.append("g");
 
-  // Nordic region bbox — tighter focus, cross-border lines extend beyond
-  const bbox = {type:"Feature",geometry:{type:"Polygon",
-    coordinates:[[[3,54],[32,54],[32,72],[3,72],[3,54]]]},properties:{}};
-  const proj = d3.geoMercator().fitExtent([[20,20],[W-20,H-20]], bbox);
+  // Projection: scale so 29° longitude (lon 3–32) fills SVG width with 20px padding.
+  // fitExtent is not used — it misidentifies the winding of a simple rectangular bbox
+  // polygon as covering the complement (rest of world), giving the default globe scale.
+  const scale = (W - 40) / (29 * Math.PI / 180);
+  const proj = d3.geoMercator()
+    .scale(scale)
+    .center([17.5, 63])   // centre of Nordic bidding zone region
+    .translate([W / 2, H / 2]);
   const path = d3.geoPath().projection(proj);
 
   // Load zone polygons
